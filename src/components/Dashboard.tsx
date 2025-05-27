@@ -10,6 +10,7 @@ import Header from './Header';
 import PortfolioSection from './PortfolioSection';
 import PortfolioChart from './PortfolioChart';
 import AssetModal from './AssetModal';
+import TransactionList from './TransactionList';
 
 const Dashboard = () => {
   const [marketData, setMarketData] = useState<MarketData>({});
@@ -55,6 +56,8 @@ const Dashboard = () => {
           
           <PortfolioChart marketData={marketData} />
         </div>
+
+        <TransactionList />
       </main>
 
       {selectedAsset && (
