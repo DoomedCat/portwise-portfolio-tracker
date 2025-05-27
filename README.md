@@ -1,73 +1,109 @@
-# Welcome to your Lovable project
 
-## Project info
+# Portfolio Tracker 📈
 
-**URL**: https://lovable.dev/projects/e3fede13-d675-49f0-b3d2-27d1004a1c82
+Современное веб-приложение для управления и отслеживания инвестиционных портфелей с интерактивными графиками и аналитикой.
 
-## How can I edit this code?
+## 🚀 Особенности
 
-There are several ways of editing your application.
+- **Безопасная авторизация** - регистрация и вход с шифрованием паролей (bcrypt)
+- **Управление портфелем** - добавление, удаление и отслеживание активов
+- **Интерактивные графики** - визуализация динамики портфеля и отдельных активов
+- **Временные диапазоны** - анализ данных за день, неделю, месяц, год или весь период
+- **Адаптивный дизайн** - оптимизирован для desktop и mobile устройств
+- **Темная тема** - современный dark mode интерфейс
+- **Offline-ready** - полностью автономное приложение без внешних API
 
-**Use Lovable**
+## 🛠 Технологии
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/e3fede13-d675-49f0-b3d2-27d1004a1c82) and start prompting.
+- **Frontend**: React 18 + TypeScript + Vite
+- **Стилизация**: Tailwind CSS с кастомной темной темой
+- **Роутинг**: React Router v6
+- **Графики**: Recharts
+- **Безопасность**: bcryptjs для хеширования паролей
+- **Состояние**: localStorage для персистентности данных
 
-Changes made via Lovable will be committed automatically to this repo.
+## 📦 Установка и запуск
 
-**Use your preferred IDE**
+```bash
+# Клонирование репозитория
+git clone <repository-url>
+cd portfolio-tracker
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+# Установка зависимостей
+npm install
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Запуск в режиме разработки
 npm run dev
+
+# Сборка для продакшена
+npm run build
+
+# Предварительный просмотр сборки
+npm run preview
 ```
 
-**Edit a file directly in GitHub**
+## 🎨 Дизайн
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- **Цветовая схема**: Темная тема (#121212 фон, #FFFFFF текст)
+- **Акцентный цвет**: Фиолетовый (#7E3FF2)
+- **Типографика**: Системные шрифты (font-sans)
+- **Компоненты**: Минималистичный дизайн с rounded-xl углами
 
-**Use GitHub Codespaces**
+## 📱 Функциональность
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Авторизация
+- Регистрация новых пользователей
+- Безопасный вход в систему
+- Шифрование паролей с помощью bcrypt
+- Автоматическое перенаправление при наличии активной сессии
 
-## What technologies are used for this project?
+### Управление портфелем
+- Добавление активов по тикеру и количеству
+- Просмотр текущей стоимости позиций
+- Удаление активов из портфеля
+- Расчет общей стоимости портфеля
 
-This project is built with:
+### Аналитика и графики
+- График динамики всего портфеля
+- Детальные графики по каждому активу
+- Выбор временных диапазонов (1Д, 1Н, 1М, 1Г, MAX)
+- Интерактивные элементы управления
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 🗄 Структура данных
 
-## How can I deploy this project?
+Приложение использует localStorage для хранения:
 
-Simply open [Lovable](https://lovable.dev/projects/e3fede13-d675-49f0-b3d2-27d1004a1c82) and click on Share -> Publish.
+- `users` - массив пользователей с хешированными паролями
+- `authToken` - токен текущей сессии
+- `portfolio` - объект с парами тикер-количество
 
-## Can I connect a custom domain to my Lovable project?
+## 📊 Данные о ценах
 
-Yes, you can!
+В папке `/data/` планируется размещение файла `prices.json` с историческими данными о ценах в формате:
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+```json
+{
+  "AAPL": {
+    "D": [{ "t": "2024-01-02", "c": 183.4 }, ...],
+    "W": [...],
+    "M": [...]
+  }
+}
+```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+В текущей версии используются сгенерированные mock-данные для демонстрации функциональности.
+
+## 🔒 Безопасность
+
+- Пароли хешируются перед сохранением
+- Минимальная длина пароля - 6 символов
+- Сессии управляются через уникальные токены
+- Автоматическое перенаправление неавторизованных пользователей
+
+## 📄 Лицензия
+
+MIT License - см. файл LICENSE для подробностей.
+
+---
+
+Создано с ❤️ для эффективного управления инвестиционными портфелями.
