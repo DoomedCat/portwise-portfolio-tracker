@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, TrendingUp } from 'lucide-react';
 import { PortfolioAsset } from '../types';
 import { removeAsset } from '../utils/portfolio';
 import { toast } from '../hooks/use-toast';
