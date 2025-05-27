@@ -5,6 +5,7 @@ import { isAuthenticated, logout } from '../utils/auth';
 import { getMarketData } from '../utils/marketData';
 import { getPortfolioAssets, getTotalPortfolioValue } from '../utils/portfolio';
 import { MarketData } from '../types';
+import { usePortfolio } from '../contexts/PortfolioContext';
 import Header from './Header';
 import PortfolioSection from './PortfolioSection';
 import PortfolioChart from './PortfolioChart';
@@ -13,7 +14,7 @@ import AssetModal from './AssetModal';
 const Dashboard = () => {
   const [marketData, setMarketData] = useState<MarketData>({});
   const [selectedAsset, setSelectedAsset] = useState<string | null>(null);
-  const [refreshKey, setRefreshKey] = useState(0);
+  const { refreshKey } = usePortfolio();
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -33,10 +34,6 @@ const Dashboard = () => {
     setSelectedAsset(ticker);
   };
 
-  const handleRefresh = () => {
-    setRefreshKey(prev => prev + 1);
-  };
-
   if (!isAuthenticated()) {
     return <Navigate to="/auth" replace />;
   }
@@ -54,7 +51,6 @@ const Dashboard = () => {
             assets={portfolioAssets}
             totalValue={totalValue}
             onAssetClick={handleAssetClick}
-            onRefresh={handleRefresh}
           />
           
           <PortfolioChart marketData={marketData} />

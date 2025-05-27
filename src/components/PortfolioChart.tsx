@@ -1,8 +1,9 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 import { TimeRange, MarketData } from '../types';
 import { getPortfolioHistory } from '../utils/marketData';
+import { usePortfolio } from '../contexts/PortfolioContext';
 
 interface PortfolioChartProps {
   marketData: MarketData;
@@ -10,6 +11,8 @@ interface PortfolioChartProps {
 
 const PortfolioChart = ({ marketData }: PortfolioChartProps) => {
   const [selectedRange, setSelectedRange] = useState<TimeRange>('1M');
+  const [chartData, setChartData] = useState<any[]>([]);
+  const { refreshKey } = usePortfolio();
 
   const ranges: { label: string; value: TimeRange }[] = [
     { label: '1Д', value: '1D' },
@@ -19,13 +22,18 @@ const PortfolioChart = ({ marketData }: PortfolioChartProps) => {
     { label: 'MAX', value: 'MAX' }
   ];
 
-  const chartData = getPortfolioHistory(selectedRange).map(item => ({
-    date: new Date(item.t).toLocaleDateString('ru-RU', { 
-      month: 'short', 
-      day: 'numeric' 
-    }),
-    value: item.c
-  }));
+  useEffect(() => {
+    const historyData = getPortfolioHistory(selectedRange);
+    const formattedData = historyData.map(item => ({
+      date: new Date(item.t).toLocaleDateString('ru-RU', { 
+        month: 'short', 
+        day: 'numeric',
+        ...(selectedRange === '1D' && { hour: '2-digit', minute: '2-digit' })
+      }),
+      value: item.c
+    }));
+    setChartData(formattedData);
+  }, [selectedRange, refreshKey]);
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('ru-RU', {

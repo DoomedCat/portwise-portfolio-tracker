@@ -2,28 +2,24 @@
 import { useState } from 'react';
 import { Plus, Trash2, TrendingUp } from 'lucide-react';
 import { PortfolioAsset } from '../types';
-import { removeAsset } from '../utils/portfolio';
 import { toast } from '../hooks/use-toast';
+import { usePortfolio } from '../contexts/PortfolioContext';
 import AddAssetModal from './AddAssetModal';
+import RemoveAssetModal from './RemoveAssetModal';
 
 interface PortfolioSectionProps {
   assets: PortfolioAsset[];
   totalValue: number;
   onAssetClick: (ticker: string) => void;
-  onRefresh: () => void;
 }
 
-const PortfolioSection = ({ assets, totalValue, onAssetClick, onRefresh }: PortfolioSectionProps) => {
+const PortfolioSection = ({ assets, totalValue, onAssetClick }: PortfolioSectionProps) => {
   const [showAddModal, setShowAddModal] = useState(false);
+  const [removeAsset, setRemoveAsset] = useState<{ticker: string, quantity: number} | null>(null);
 
-  const handleRemoveAsset = (ticker: string, e: React.MouseEvent) => {
+  const handleRemoveAsset = (ticker: string, quantity: number, e: React.MouseEvent) => {
     e.stopPropagation();
-    removeAsset(ticker);
-    onRefresh();
-    toast({
-      title: "Актив удален",
-      description: `${ticker} удален из портфеля`
-    });
+    setRemoveAsset({ ticker, quantity });
   };
 
   const formatCurrency = (value: number) => {
@@ -94,7 +90,7 @@ const PortfolioSection = ({ assets, totalValue, onAssetClick, onRefresh }: Portf
                   <div className="text-foreground font-medium">{formatCurrency(asset.totalValue)}</div>
                   <div className="flex justify-end">
                     <button
-                      onClick={(e) => handleRemoveAsset(asset.ticker, e)}
+                      onClick={(e) => handleRemoveAsset(asset.ticker, asset.quantity, e)}
                       className="text-destructive hover:text-destructive/80 transition-colors p-1"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -116,7 +112,7 @@ const PortfolioSection = ({ assets, totalValue, onAssetClick, onRefresh }: Portf
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="font-bold text-foreground text-lg">{asset.ticker}</h3>
                   <button
-                    onClick={(e) => handleRemoveAsset(asset.ticker, e)}
+                    onClick={(e) => handleRemoveAsset(asset.ticker, asset.quantity, e)}
                     className="text-destructive hover:text-destructive/80 transition-colors p-1"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -145,7 +141,14 @@ const PortfolioSection = ({ assets, totalValue, onAssetClick, onRefresh }: Portf
       {showAddModal && (
         <AddAssetModal
           onClose={() => setShowAddModal(false)}
-          onSuccess={onRefresh}
+        />
+      )}
+
+      {removeAsset && (
+        <RemoveAssetModal
+          ticker={removeAsset.ticker}
+          currentQuantity={removeAsset.quantity}
+          onClose={() => setRemoveAsset(null)}
         />
       )}
     </div>

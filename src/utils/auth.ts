@@ -1,10 +1,11 @@
 
 import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
-import { User } from '../types';
+import { User, AuthToken } from '../types';
 
 const USERS_KEY = 'users';
 const AUTH_TOKEN_KEY = 'authToken';
+const SESSION_DURATION = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
 
 export const getUsers = (): User[] => {
   const users = localStorage.getItem(USERS_KEY);
@@ -59,8 +60,11 @@ export const login = async (email: string, password: string): Promise<{ success:
     return { success: false, message: 'Неверные учетные данные' };
   }
 
-  const token = uuidv4();
-  localStorage.setItem(AUTH_TOKEN_KEY, token);
+  const authToken: AuthToken = {
+    token: uuidv4(),
+    issuedAt: new Date().toISOString()
+  };
+  localStorage.setItem(AUTH_TOKEN_KEY, JSON.stringify(authToken));
   
   return { success: true, message: 'Успешный вход' };
 };
@@ -70,5 +74,25 @@ export const logout = (): void => {
 };
 
 export const isAuthenticated = (): boolean => {
-  return !!localStorage.getItem(AUTH_TOKEN_KEY);
+  const authData = localStorage.getItem(AUTH_TOKEN_KEY);
+  
+  if (!authData) {
+    return false;
+  }
+
+  try {
+    const authToken: AuthToken = JSON.parse(authData);
+    const issuedTime = new Date(authToken.issuedAt).getTime();
+    const currentTime = new Date().getTime();
+    
+    if (currentTime - issuedTime > SESSION_DURATION) {
+      logout();
+      return false;
+    }
+    
+    return true;
+  } catch {
+    logout();
+    return false;
+  }
 };
